@@ -63,6 +63,7 @@ class Subscriber implements SubscriberInterface {
             "{$this->prefix}_render_template" => ['render', 10 , 2],
             "{$this->prefix}_delete_template" => ['delete', 10, 2],
             "{$this->prefix}_clean_all_templates" => 'clear',
+            'launchpad_clean_all_templates' => 'clear',
         ];
     }
 

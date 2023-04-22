@@ -86,4 +86,9 @@ class Subscriber implements SubscriberInterface {
     public function clear() {
         $this->cache->clear();
     }
+
+    protected function transform_parameters_into_hash(array $parameters) {
+        $json = wp_json_encode($parameters);
+        return wp_hash($json);
+    }
 }

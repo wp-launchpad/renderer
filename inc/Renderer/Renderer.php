@@ -14,7 +14,7 @@ class Renderer
     /**
      * @param string $root_directory
      */
-    public function __construct(FilesystemBase $filesystem, string $root_directory)
+    public function __construct(string $root_directory)
     {
         $this->root_directory = $root_directory;
     }
@@ -23,7 +23,6 @@ class Renderer
         foreach ($parameters as $key => $value) {
             $$key = $value;
         }
-        return require_once $this->root_directory . '/' . $template . '.php';
-
+        return include $this->root_directory . '/' . $template . '.php';
     }
 }

@@ -2,17 +2,15 @@
 
 namespace LaunchpadRenderer\Tests\Unit\inc\Renderer\Renderer;
 
+use LaunchpadRenderer\Tests\Unit\FilesystemTestCase;
 use Mockery;
 use LaunchpadRenderer\Renderer\Renderer;
 use LaunchpadFilesystem\FilesystemBase;
 
-
-use LaunchpadRenderer\Tests\Unit\TestCase;
-
 /**
  * @covers \LaunchpadRenderer\Renderer\Renderer::render
  */
-class Test_render extends TestCase {
+class Test_render extends FilesystemTestCase {
 
     /**
      * @var FilesystemBase
@@ -32,9 +30,9 @@ class Test_render extends TestCase {
     public function set_up() {
         parent::set_up();
         $this->filesystem = Mockery::mock(FilesystemBase::class);
-        $this->root_directory = '';
+        $this->root_directory = $this->rootVirtualUrl;
 
-        $this->renderer = new Renderer($this->filesystem, $this->root_directory);
+        $this->renderer = new Renderer($this->root_directory);
     }
 
     /**

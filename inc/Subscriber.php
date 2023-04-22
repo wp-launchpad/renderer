@@ -4,6 +4,7 @@ namespace LaunchpadRenderer;
 use LaunchpadCore\EventManagement\SubscriberInterface;
 use LaunchpadRenderer\Renderer\Renderer;
 use Psr\SimpleCache\CacheInterface;
+use Psr\SimpleCache\InvalidArgumentException;
 
 class Subscriber implements SubscriberInterface {
 
@@ -72,16 +73,32 @@ class Subscriber implements SubscriberInterface {
         if( ! $this->renderer_cache_enabled ) {
             return false;
         }
+        $key = $this->create_key($template, $configurations);
 
-        return false;
+        return $this->cache->has($key);
     }
 
     public function render(string $template, array $configurations = []) {
+        $key = $this->create_key($template, $configurations);
 
+        if( $this->has($template, $configurations) ) {
+            return $this->cache->get($key);
+        }
+
+        $content = $this->renderer->render($template, $configurations);
+
+        if( $this->renderer_cache_enabled ) {
+            $this->cache->set($key, $content);
+        }
+
+        echo $content;
     }
 
     public function delete(string $template, array $configurations = []) {
-
+        $key = $this->create_key($template, $configurations);
+        try {
+            $this->cache->delete($key);
+        } catch (InvalidArgumentException $e) {}
     }
 
     public function clear() {
@@ -91,5 +108,9 @@ class Subscriber implements SubscriberInterface {
     protected function transform_parameters_into_hash(array $parameters) {
         $json = wp_json_encode($parameters);
         return wp_hash($json);
+    }
+
+    protected function create_key(string $template, array $parameters) {
+        return $template . '-' . $this->transform_parameters_into_hash($parameters);
     }
 }

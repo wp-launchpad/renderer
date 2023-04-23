@@ -2,8 +2,6 @@
 
 namespace LaunchpadRenderer\Renderer;
 
-use LaunchpadFilesystem\FilesystemBase;
-
 class Renderer
 {
     /**
@@ -23,6 +21,8 @@ class Renderer
         foreach ($parameters as $key => $value) {
             $$key = $value;
         }
-        return include $this->root_directory . '/' . $template . '.php';
+        ob_start();
+        include $this->root_directory . '/' . $template . '.php';
+        return ob_get_clean();
     }
 }

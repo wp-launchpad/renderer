@@ -7,13 +7,13 @@ return [
     'test_data' => [
         '' => [
             'config' => [
-                  'template' => '',
-                  'parameters' => [],
-
+                  'template' => 'view',
+                  'parameters' => [
+                      'title' =>  'My title',
+                      'description' => 'My body'
+                  ],
             ],
-            'expected' => [
-
-            ]
+            'expected' => file_get_contents(__DIR__ . '/output.html'),
         ],
     ],
 ];

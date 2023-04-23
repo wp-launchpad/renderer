@@ -40,6 +40,6 @@ class Test_render extends FilesystemTestCase {
      */
     public function testShouldReturnAsExpected( $config, $expected )
     {
-        $this->assertSame($expected, $this->renderer->render($config['template'], $config['parameters']));
+        $this->assertSame($this->format_the_html($expected), $this->format_the_html($this->renderer->render($config['template'], $config['parameters'])));
     }
 }

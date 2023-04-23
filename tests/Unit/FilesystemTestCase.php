@@ -9,12 +9,14 @@ abstract class FilesystemTestCase extends VirtualFilesystemTestCase
 {
     protected $config;
 
-    protected function setUp(): void {
-        parent::setUp();
+    protected function set_up() {
+        parent::set_up();
 
         if ( empty( $this->config ) ) {
             $this->loadTestDataConfig();
         }
+
+        $this->init();
     }
 
     public function configTestData() {

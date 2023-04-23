@@ -50,8 +50,8 @@ class Test_getMultiple extends TestCase {
      */
     public function testShouldReturnAsExpected( $config, $expected )
     {
-        foreach ($expected as $key) {
-
+        foreach ($expected['values'] as $key => $value) {
+            $this->wpfilesystemcache->expects()->get($key, $expected['default'])->andReturn($value);
         }
 
         $this->assertSame($expected['results'], $this->wpfilesystemcache->getMultiple($config['values'], $config['default']));

@@ -1,6 +1,7 @@
 <?php
 
 use LaunchpadCore\Plugin;
+use LaunchpadRenderer\Cache\WPFilesystemCache;
 use League\Container\Container;
 use LaunchpadCore\EventManagement\EventManager;
 
@@ -25,6 +26,10 @@ add_action( 'plugins_loaded',  function() {
 
     $wp_rocket->load( [
         'prefix' => '',
+        'template_path' => '',
+        'root_directory' => '',
+        'renderer_cache_enabled' => true,
+        'renderer_caching_solution' => WPFilesystemCache::class
     ], [
         \LaunchpadRenderer\ServiceProvider::class
     ] );

@@ -35,7 +35,9 @@ class ServiceProvider extends AbstractServiceProvider
 
         $this->register_service(WPFilesystemCache::class, function (Definition $definition) {
             $definition
-                ->addArgument(WPFilesystemDirect::class);
+                ->addArgument($this->getContainer()->get(WPFilesystemDirect::class))
+                ->addArgument($this->getContainer()->get('root_directory'))
+                ->addArgument($this->getContainer()->get('prefix'));
         });
 
         $this->register_service(Renderer::class, function (Definition $definition) {
@@ -47,7 +49,7 @@ class ServiceProvider extends AbstractServiceProvider
             $definition
                 ->addArgument($this->getContainer()->get('prefix'))
                 ->addArgument($this->getContainer()->get('renderer_cache_enabled'))
-                ->addArgument($this->getContainer()->get('renderer_caching_solution'))
+                ->addArgument($this->getContainer()->get($this->getContainer()->get('renderer_caching_solution')))
                 ->addArgument($this->getContainer()->get(Renderer::class));
         });
     }

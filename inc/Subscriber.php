@@ -82,7 +82,7 @@ class Subscriber implements SubscriberInterface {
         $key = $this->create_key($template, $configurations);
 
         if( $this->has($template, $configurations) ) {
-            return $this->cache->get($key);
+            echo $this->cache->get($key);
         }
 
         $content = $this->renderer->render($template, $configurations);

@@ -2,6 +2,7 @@
 
 namespace LaunchpadRenderer\Tests\Unit\inc\Cache\WPFilesystemCache;
 
+use LaunchpadRenderer\Tests\Unit\InitializeProperties;
 use Mockery;
 use LaunchpadRenderer\Cache\WPFilesystemCache;
 use LaunchpadFilesystem\FilesystemBase;
@@ -14,6 +15,8 @@ use Brain\Monkey\Functions;
  * @covers \LaunchpadRenderer\Cache\WPFilesystemCache::clear
  */
 class Test_clear extends TestCase {
+
+    use InitializeProperties;
 
     /**
      * @var FilesystemBase
@@ -47,8 +50,10 @@ class Test_clear extends TestCase {
     /**
      * @dataProvider configTestData
      */
-    public function testShouldDoAsExpected( $config )
+    public function testShouldDoAsExpected( $config, $expected )
     {
+        $this->setProperties($this->wpfilesystemcache, $config['properties']);
+        $this->filesystem->expects()->rmdir($expected, true);
         $this->wpfilesystemcache->clear();
 
     }

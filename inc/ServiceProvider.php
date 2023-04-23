@@ -33,6 +33,8 @@ class ServiceProvider extends AbstractServiceProvider
     public function define()
     {
 
+        $this->register_service(WPFilesystemDirect::class);
+
         $this->register_service(WPFilesystemCache::class, function (Definition $definition) {
             $definition
                 ->addArgument($this->getContainer()->get(WPFilesystemDirect::class))
@@ -46,10 +48,15 @@ class ServiceProvider extends AbstractServiceProvider
         });
 
         $this->register_service(Subscriber::class, function (Definition $definition) {
+            $renderer_caching_solutions = $this->getContainer()->get('renderer_caching_solution') ?: [];
+            $renderer_caching_solution = array_pop($renderer_caching_solutions);
+            if(! $renderer_caching_solution) {
+                $renderer_caching_solution = WPFilesystemCache::class;
+            }
             $definition
                 ->addArgument($this->getContainer()->get('prefix'))
                 ->addArgument($this->getContainer()->get('renderer_cache_enabled'))
-                ->addArgument($this->getContainer()->get($this->getContainer()->get('renderer_caching_solution')))
+                ->addArgument($this->getContainer()->get($renderer_caching_solution))
                 ->addArgument($this->getContainer()->get(Renderer::class));
         });
     }

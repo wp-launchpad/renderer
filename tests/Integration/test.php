@@ -29,7 +29,7 @@ add_action( 'plugins_loaded',  function() {
         'template_path' => '',
         'root_directory' => '',
         'renderer_cache_enabled' => true,
-        'renderer_caching_solution' => WPFilesystemCache::class
+        'renderer_caching_solution' => [WPFilesystemCache::class]
     ], [
         \LaunchpadRenderer\ServiceProvider::class
     ] );

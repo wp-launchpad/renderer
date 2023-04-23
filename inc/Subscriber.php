@@ -83,6 +83,7 @@ class Subscriber implements SubscriberInterface {
 
         if( $this->has($template, $configurations) ) {
             echo $this->cache->get($key);
+            return;
         }
 
         $content = $this->renderer->render($template, $configurations);

@@ -10,71 +10,69 @@ class WPFilesystemCache implements CacheInterface
 {
 
     /**
+     * WordPress filesystem.
+     *
      * @var FilesystemBase
      */
     protected $filesystem;
 
     /**
-     * @inheritDoc
+     * Root directory from the cache
+     * @var string
      */
-    public function get(string $key, mixed $default = null): mixed
+    protected $root_directory;
+
+    /**
+     * @param FilesystemBase $filesystem
+     * @param string $root_directory
+     */
+    public function __construct(FilesystemBase $filesystem, string $root_directory)
+    {
+        $this->filesystem = $filesystem;
+        $this->root_directory = $root_directory;
+    }
+
+    public function get($key, $default = null)
     {
         // TODO: Implement get() method.
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function set(string $key, mixed $value, ?DateInterval $ttl = null): bool
+    public function set($key, $value, $ttl = null)
     {
         // TODO: Implement set() method.
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function delete(string $key): bool
+    public function delete($key)
     {
         // TODO: Implement delete() method.
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function clear(): bool
+    public function clear()
     {
         // TODO: Implement clear() method.
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getMultiple(iterable $keys, mixed $default = null): iterable
+    public function getMultiple($keys, $default = null)
     {
         // TODO: Implement getMultiple() method.
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function setMultiple(iterable $values, ?DateInterval $ttl = null): bool
+    public function setMultiple($values, $ttl = null)
     {
         // TODO: Implement setMultiple() method.
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function deleteMultiple(iterable $keys): bool
+    public function deleteMultiple($keys)
     {
         // TODO: Implement deleteMultiple() method.
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function has(string $key): bool
+    public function has($key)
     {
         // TODO: Implement has() method.
+    }
+
+    protected function transform_key_to_path(string $key): string {
+
     }
 }

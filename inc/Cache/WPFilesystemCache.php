@@ -59,9 +59,11 @@ class WPFilesystemCache implements CacheInterface
 
     public function getMultiple($keys, $default = null)
     {
-        return array_map(function ($key) use ($default) {
-            return $this->get($key, $default);
-        }, (array) $keys);
+        $output = [];
+        foreach ($keys as $key) {
+            $output[$key] = $this->get($key, $default);
+        }
+        return $output;
     }
 
     public function setMultiple($values, $ttl = null)

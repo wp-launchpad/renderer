@@ -8,6 +8,7 @@ use LaunchpadFilesystem\FilesystemBase;
 
 
 use LaunchpadRenderer\Tests\Unit\TestCase;
+use Brain\Monkey\Functions;
 
 /**
  * @covers \LaunchpadRenderer\Cache\WPFilesystemCache::deleteMultiple
@@ -39,16 +40,19 @@ class Test_deleteMultiple extends TestCase {
         $this->filesystem = Mockery::mock(FilesystemBase::class);
         $this->root_directory = '';
         $this->prefix = '';
+        Functions\when('wp_hash')->justReturn('hash');
 
-        $this->wpfilesystemcache = new WPFilesystemCache($this->filesystem, $this->root_directory, $this->prefix);
+        $this->wpfilesystemcache = Mockery::mock( WPFilesystemCache::class . '[delete]', [$this->filesystem, $this->root_directory, $this->prefix]);
     }
 
     /**
      * @dataProvider configTestData
      */
-    public function testShouldDoAsExpected( $config )
+    public function testShouldDoAsExpected( $config, $expected )
     {
-        $this->wpfilesystemcache->deleteMultiple();
-
+        foreach ($expected as $key) {
+            $this->wpfilesystemcache->expects()->delete($key);
+        }
+        $this->wpfilesystemcache->deleteMultiple($config['values']);
     }
 }

@@ -2,17 +2,21 @@
 
 namespace LaunchpadRenderer\Tests\Unit\inc\Cache\WPFilesystemCache;
 
+use LaunchpadRenderer\Tests\Unit\InitializeProperties;
 use Mockery;
 use LaunchpadRenderer\Cache\WPFilesystemCache;
 use LaunchpadFilesystem\FilesystemBase;
 
 
 use LaunchpadRenderer\Tests\Unit\TestCase;
+use Brain\Monkey\Functions;
 
 /**
  * @covers \LaunchpadRenderer\Cache\WPFilesystemCache::delete
  */
 class Test_delete extends TestCase {
+
+    use InitializeProperties;
 
     /**
      * @var FilesystemBase
@@ -39,6 +43,7 @@ class Test_delete extends TestCase {
         $this->filesystem = Mockery::mock(FilesystemBase::class);
         $this->root_directory = '';
         $this->prefix = '';
+        Functions\when('wp_hash')->justReturn('hash');
 
         $this->wpfilesystemcache = new WPFilesystemCache($this->filesystem, $this->root_directory, $this->prefix);
     }
@@ -46,9 +51,12 @@ class Test_delete extends TestCase {
     /**
      * @dataProvider configTestData
      */
-    public function testShouldDoAsExpected( $config )
+    public function testShouldDoAsExpected( $config, $expected )
     {
-        $this->wpfilesystemcache->delete();
+        $this->setProperties($this->wpfilesystemcache, $config['properties']);
+        $this->filesystem->expects()->delete($expected['path']);
+
+        $this->wpfilesystemcache->delete($config['key']);
 
     }
 }

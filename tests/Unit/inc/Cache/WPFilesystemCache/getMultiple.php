@@ -8,6 +8,7 @@ use LaunchpadFilesystem\FilesystemBase;
 
 
 use LaunchpadRenderer\Tests\Unit\TestCase;
+use Brain\Monkey\Functions;
 
 /**
  * @covers \LaunchpadRenderer\Cache\WPFilesystemCache::getMultiple
@@ -39,8 +40,9 @@ class Test_getMultiple extends TestCase {
         $this->filesystem = Mockery::mock(FilesystemBase::class);
         $this->root_directory = '';
         $this->prefix = '';
+        Functions\when('wp_hash')->justReturn('hash');
 
-        $this->wpfilesystemcache = new WPFilesystemCache($this->filesystem, $this->root_directory, $this->prefix);
+        $this->wpfilesystemcache = Mockery::mock(WPFilesystemCache::class . '[get]', [$this->filesystem, $this->root_directory, $this->prefix]);
     }
 
     /**
@@ -48,7 +50,10 @@ class Test_getMultiple extends TestCase {
      */
     public function testShouldReturnAsExpected( $config, $expected )
     {
-        $this->assertSame($expected, $this->wpfilesystemcache->getMultiple($config['default']));
+        foreach ($expected as $key) {
 
+        }
+
+        $this->assertSame($expected['results'], $this->wpfilesystemcache->getMultiple($config['values'], $config['default']));
     }
 }

@@ -8,6 +8,7 @@ use LaunchpadFilesystem\FilesystemBase;
 
 
 use LaunchpadRenderer\Tests\Unit\TestCase;
+use Brain\Monkey\Functions;
 
 /**
  * @covers \LaunchpadRenderer\Cache\WPFilesystemCache::get
@@ -39,6 +40,7 @@ class Test_get extends TestCase {
         $this->filesystem = Mockery::mock(FilesystemBase::class);
         $this->root_directory = '';
         $this->prefix = '';
+        Functions\when('wp_hash')->justReturn('hash');
 
         $this->wpfilesystemcache = new WPFilesystemCache($this->filesystem, $this->root_directory, $this->prefix);
     }

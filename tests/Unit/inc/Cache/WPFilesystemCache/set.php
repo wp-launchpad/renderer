@@ -2,6 +2,7 @@
 
 namespace LaunchpadRenderer\Tests\Unit\inc\Cache\WPFilesystemCache;
 
+use LaunchpadRenderer\Tests\Unit\InitializeProperties;
 use Mockery;
 use LaunchpadRenderer\Cache\WPFilesystemCache;
 use LaunchpadFilesystem\FilesystemBase;
@@ -9,10 +10,13 @@ use LaunchpadFilesystem\FilesystemBase;
 
 use LaunchpadRenderer\Tests\Unit\TestCase;
 
+use Brain\Monkey\Functions;
 /**
  * @covers \LaunchpadRenderer\Cache\WPFilesystemCache::set
  */
 class Test_set extends TestCase {
+
+    use InitializeProperties;
 
     /**
      * @var FilesystemBase
@@ -39,6 +43,7 @@ class Test_set extends TestCase {
         $this->filesystem = Mockery::mock(FilesystemBase::class);
         $this->root_directory = '';
         $this->prefix = '';
+        Functions\when('wp_hash')->justReturn('hash');
 
         $this->wpfilesystemcache = new WPFilesystemCache($this->filesystem, $this->root_directory, $this->prefix);
     }
@@ -46,9 +51,11 @@ class Test_set extends TestCase {
     /**
      * @dataProvider configTestData
      */
-    public function testShouldDoAsExpected( $config )
+    public function testShouldDoAsExpected( $config, $expected )
     {
-        $this->wpfilesystemcache->set($config['value'], $config['ttl']);
+        $this->setProperties($this->wpfilesystemcache, $config['properties']);
+        $this->filesystem->expects()->put_contents($expected['path'], $expected['content']);
+        $this->wpfilesystemcache->set($config['key'], $config['value'], $config['ttl']);
 
     }
 }

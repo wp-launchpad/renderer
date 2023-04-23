@@ -37,7 +37,7 @@ class WPFilesystemCache implements CacheInterface
     {
         $path = $this->transform_key_to_path($key);
         if(! $this->filesystem->exists($path)) {
-            return  $default;
+            return $default;
         }
         return $this->filesystem->get_contents($path);
     }

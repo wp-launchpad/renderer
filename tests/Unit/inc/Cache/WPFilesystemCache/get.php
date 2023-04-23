@@ -2,6 +2,7 @@
 
 namespace LaunchpadRenderer\Tests\Unit\inc\Cache\WPFilesystemCache;
 
+use LaunchpadRenderer\Tests\Unit\InitializeProperties;
 use Mockery;
 use LaunchpadRenderer\Cache\WPFilesystemCache;
 use LaunchpadFilesystem\FilesystemBase;
@@ -14,6 +15,8 @@ use Brain\Monkey\Functions;
  * @covers \LaunchpadRenderer\Cache\WPFilesystemCache::get
  */
 class Test_get extends TestCase {
+
+    use InitializeProperties;
 
     /**
      * @var FilesystemBase
@@ -50,7 +53,17 @@ class Test_get extends TestCase {
      */
     public function testShouldReturnAsExpected( $config, $expected )
     {
-        $this->assertSame($expected, $this->wpfilesystemcache->get($config['default']));
+        $this->setProperties($this->wpfilesystemcache, $config['properties']);
+        $this->filesystem->expects()->exists($expected['path'])->andReturn($config['exists']);
+        $this->configureFetchData($config, $expected);
+        $this->assertSame($expected['result'], $this->wpfilesystemcache->get($config['key'], $config['default']));
+    }
 
+    protected function configureFetchData($config, $expected) {
+        if(! $config['exists']) {
+            return;
+        }
+
+        $this->filesystem->expects()->get_contents($expected['path'])->andReturn($config['content']);
     }
 }

@@ -2,6 +2,7 @@
 
 use LaunchpadCore\Plugin;
 use LaunchpadRenderer\Cache\WPFilesystemCache;
+use LaunchpadRenderer\ServiceProvider;
 use League\Container\Container;
 use LaunchpadCore\EventManagement\EventManager;
 
@@ -25,12 +26,12 @@ add_action( 'plugins_loaded',  function() {
     );
 
     $wp_rocket->load( [
-        'prefix' => '',
-        'template_path' => '',
-        'root_directory' => '',
+        'prefix' => 'prefix_',
+        'template_path' => LAUNCHPAD_RENDERER_TESTS_FIXTURES_DIR . '/files/templates/',
+        'root_directory' => WP_CONTENT_DIR . '/cache/',
         'renderer_cache_enabled' => true,
         'renderer_caching_solution' => [WPFilesystemCache::class]
     ], [
-        \LaunchpadRenderer\ServiceProvider::class
+        ServiceProvider::class
     ] );
 } );

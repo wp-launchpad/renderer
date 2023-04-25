@@ -23,6 +23,11 @@ class WPFilesystemCache implements CacheInterface
     protected $root_directory;
 
     /**
+     * @var string
+     */
+    protected $prefix;
+
+    /**
      * @param FilesystemBase $filesystem
      * @param string $root_directory
      * @param string $prefix
@@ -31,6 +36,7 @@ class WPFilesystemCache implements CacheInterface
     {
         $this->filesystem = $filesystem;
         $this->root_directory = $root_directory . DIRECTORY_SEPARATOR . $prefix . wp_hash($prefix) . DIRECTORY_SEPARATOR;
+        $this->prefix = $prefix;
     }
 
     public function get($key, $default = null)
@@ -87,7 +93,7 @@ class WPFilesystemCache implements CacheInterface
     }
 
     protected function transform_key_to_path(string $key): string {
-        $path = $this->root_directory . '/' . $key;
+        $path = apply_filters("{$this->prefix}root_path", $this->root_directory . '/' ) . $key;
         return  str_replace('/', DIRECTORY_SEPARATOR, $path) . '.html';
     }
 }

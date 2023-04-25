@@ -1,9 +1,17 @@
 <?php
 return [
-    '' => [
-        'config' => [
+    'vfs_dir' => '/',
+    'structure' => [
 
-        ],
     ],
+    'test_data' => [
+        'shouldCleanDirectory' => [
+            'config' => [
+                ''
+            ],
+            'expected' => [
 
+            ]
+        ],
+    ]
 ];

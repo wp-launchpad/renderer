@@ -3,7 +3,7 @@
 namespace LaunchpadRenderer\Tests\Integration;
 
 use ReflectionObject;
-use WPMedia\PHPUnit\Integration\TestCase as BaseTestCase;
+use WPMedia\PHPUnit\Integration\VirtualFilesystemTestCase as BaseTestCase;
 
 abstract class TestCase extends BaseTestCase
 {
@@ -38,6 +38,8 @@ abstract class TestCase extends BaseTestCase
         if ( empty( $this->config ) ) {
             $this->loadTestDataConfig();
         }
+
+        $this->init();
     }
 
     public function configTestData() {

@@ -60,10 +60,10 @@ class Subscriber implements SubscriberInterface {
      */
     public function get_subscribed_events() {
         return [
-            "{$this->prefix}_has_template" => ['has', 10, 2],
-            "{$this->prefix}_render_template" => ['render', 10 , 2],
-            "{$this->prefix}_delete_template" => ['delete', 10, 2],
-            "{$this->prefix}_clean_all_templates" => 'clear',
+            "{$this->prefix}has_template" => ['has', 10, 2],
+            "{$this->prefix}render_template" => ['render', 10 , 2],
+            "{$this->prefix}delete_template" => ['delete', 10, 2],
+            "{$this->prefix}clean_all_templates" => 'clear',
             'launchpad_clean_all_templates' => 'clear',
         ];
     }
@@ -108,7 +108,7 @@ class Subscriber implements SubscriberInterface {
 
     protected function transform_parameters_into_hash(array $parameters) {
         $json = wp_json_encode($parameters);
-        return wp_hash($json);
+        return md5($json);
     }
 
     protected function create_key(string $template, array $parameters) {

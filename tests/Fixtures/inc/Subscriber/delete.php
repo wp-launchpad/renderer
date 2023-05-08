@@ -12,7 +12,7 @@ return [
 
             ],
             'json' => 'json',
-            'key' => 'view-hash'
+            'key' => 'view-d751713988987e9331980363e24189ce'
         ]
     ],
 

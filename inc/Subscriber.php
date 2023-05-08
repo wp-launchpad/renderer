@@ -3,6 +3,7 @@ namespace LaunchpadRenderer;
 
 use LaunchpadCore\EventManagement\SubscriberInterface;
 use LaunchpadRenderer\Renderer\Renderer;
+use League\Plates\Engine;
 use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 
@@ -24,15 +25,17 @@ class Subscriber implements SubscriberInterface {
     protected $cache;
 
     /**
-     * @var Renderer
+     * @var Engine
      */
     protected $renderer;
 
     /**
      * @param string $prefix
      * @param bool $renderer_cache_enabled
+     * @param CacheInterface $cache
+     * @param Engine $renderer
      */
-    public function __construct(string $prefix, bool $renderer_cache_enabled, CacheInterface $cache, Renderer $renderer)
+    public function __construct(string $prefix, bool $renderer_cache_enabled, CacheInterface $cache, Engine $renderer)
     {
         $this->prefix = $prefix;
         $this->renderer_cache_enabled = $renderer_cache_enabled;

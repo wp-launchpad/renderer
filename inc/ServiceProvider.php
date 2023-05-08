@@ -5,8 +5,8 @@ namespace LaunchpadRenderer;
 use LaunchpadCore\Container\AbstractServiceProvider;
 use LaunchpadFilesystem\WPFilesystemDirect;
 use LaunchpadRenderer\Cache\WPFilesystemCache;
-use LaunchpadRenderer\Renderer\Renderer;
 use League\Container\Definition\Definition;
+use League\Plates\Engine;
 
 /**
  * Service provider.
@@ -42,7 +42,7 @@ class ServiceProvider extends AbstractServiceProvider
                 ->addArgument($this->getContainer()->get('prefix'));
         });
 
-        $this->register_service(Renderer::class, function (Definition $definition) {
+        $this->register_service(Engine::class, function (Definition $definition) {
             $definition
                 ->addArgument($this->getContainer()->get('template_path'));
         });
@@ -57,7 +57,7 @@ class ServiceProvider extends AbstractServiceProvider
                 ->addArgument($this->getContainer()->get('prefix'))
                 ->addArgument($this->getContainer()->get('renderer_cache_enabled'))
                 ->addArgument($this->getContainer()->get($renderer_caching_solution))
-                ->addArgument($this->getContainer()->get(Renderer::class));
+                ->addArgument($this->getContainer()->get(Engine::class));
         });
     }
 }

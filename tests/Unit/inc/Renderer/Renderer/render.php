@@ -3,6 +3,7 @@
 namespace LaunchpadRenderer\Tests\Unit\inc\Renderer\Renderer;
 
 use LaunchpadRenderer\Tests\Unit\FilesystemTestCase;
+use League\Plates\Engine;
 use Mockery;
 use LaunchpadRenderer\Renderer\Renderer;
 use LaunchpadFilesystem\FilesystemBase;
@@ -32,7 +33,7 @@ class Test_render extends FilesystemTestCase {
         $this->filesystem = Mockery::mock(FilesystemBase::class);
         $this->root_directory = $this->rootVirtualUrl;
 
-        $this->renderer = new Renderer($this->root_directory);
+        $this->renderer = new Engine($this->root_directory);
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace LaunchpadRenderer\Tests\Unit\inc\Subscriber;
 
 use LaunchpadRenderer\Tests\Unit\InitializeProperties;
+use League\Plates\Engine;
 use Mockery;
 use LaunchpadRenderer\Subscriber;
 use Psr\SimpleCache\CacheInterface;
@@ -48,7 +49,7 @@ class Test_getSubscribedEvents extends TestCase {
         $this->prefix = '';
         $this->renderer_cache_enabled = false;
         $this->cache = Mockery::mock(CacheInterface::class);
-        $this->renderer = Mockery::mock(Renderer::class);
+        $this->renderer = Mockery::mock(Engine::class);
 
         $this->subscriber = new Subscriber($this->prefix, $this->renderer_cache_enabled, $this->cache, $this->renderer);
     }

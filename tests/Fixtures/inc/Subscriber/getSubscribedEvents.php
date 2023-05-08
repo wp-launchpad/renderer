@@ -3,7 +3,7 @@ return [
     'shouldReturnEvents' => [
         'config' => [
             'properties' => [
-                'prefix' => 'lchpd',
+                'prefix' => 'lchpd_',
             ]
         ],
         'expected' => [

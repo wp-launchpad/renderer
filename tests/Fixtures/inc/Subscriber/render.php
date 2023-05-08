@@ -16,7 +16,7 @@ return [
         ],
         'expected' => [
             'content' => 'content',
-            'key' => 'view-hash',
+            'key' => 'view-d751713988987e9331980363e24189ce',
             'json' => 'json',
             'template' => 'view',
             'parameters' => [
@@ -40,7 +40,7 @@ return [
         ],
         'expected' => [
             'content' => 'cached_content',
-            'key' => 'view-hash',
+            'key' => 'view-d751713988987e9331980363e24189ce',
             'json' => 'json',
             'template' => 'view',
             'parameters' => [
@@ -64,7 +64,7 @@ return [
         ],
         'expected' => [
             'content' => 'content',
-            'key' => 'view-hash',
+            'key' => 'view-d751713988987e9331980363e24189ce',
             'json' => 'json',
             'template' => 'view',
             'parameters' => [

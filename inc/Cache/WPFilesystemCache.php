@@ -2,7 +2,7 @@
 
 namespace LaunchpadRenderer\Cache;
 
-use DateInterval;
+use DateTime;
 use LaunchpadFilesystem\FilesystemBase;
 use Psr\SimpleCache\CacheInterface;
 
@@ -17,20 +17,23 @@ class WPFilesystemCache implements CacheInterface
     protected $filesystem;
 
     /**
-     * Root directory from the cache
+     * Root directory from the cache.
      * @var string
      */
     protected $root_directory;
 
     /**
+     * Hook prefix.
+     *
      * @var string
      */
     protected $prefix;
 
     /**
-     * @param FilesystemBase $filesystem
-     * @param string $root_directory
-     * @param string $prefix
+     * Instantiate class.
+     * @param FilesystemBase $filesystem WordPress filesystem.
+     * @param string $root_directory Root directory from the cache.
+     * @param string $prefix Hook prefix.
      */
     public function __construct(FilesystemBase $filesystem, string $root_directory, string $prefix)
     {
@@ -39,6 +42,12 @@ class WPFilesystemCache implements CacheInterface
         $this->prefix = $prefix;
     }
 
+    /**
+     * Get the value from the cache.
+     * @param string $key key from the value.
+     * @param mixed $default Default value.
+     * @return false|mixed|string|null
+     */
     public function get($key, $default = null)
     {
         $path = $this->transform_key_to_path($key);
@@ -48,21 +57,45 @@ class WPFilesystemCache implements CacheInterface
         return $this->filesystem->get_contents($path);
     }
 
+    /**
+     * Save a value.
+     *
+     * @param string $key Key from the value.
+     * @param mixed $value Value to save.
+     * @param DateTime|int|null $ttl Expiration date.
+     * @return void
+     */
     public function set($key, $value, $ttl = null)
     {
         $this->filesystem->put_contents($this->transform_key_to_path($key), $value);
     }
 
+    /**
+     * Delete a key.
+     * @param string $key Key to delete.
+     * @return void
+     */
     public function delete($key)
     {
         $this->filesystem->delete($this->transform_key_to_path($key));
     }
 
+    /**
+     * Clear the cache.
+     *
+     * @return void
+     */
     public function clear()
     {
         $this->filesystem->delete($this->get_root(), true);
     }
 
+    /**
+     * Get multiple values.
+     * @param string[] $keys key from the value.
+     * @param mixed $default Default value.
+     * @return array
+     */
     public function getMultiple($keys, $default = null)
     {
         $output = [];
@@ -72,6 +105,13 @@ class WPFilesystemCache implements CacheInterface
         return $output;
     }
 
+    /**
+     * Set multiple values.
+     *
+     * @param array<string,mixed> $values Value to save.
+     * @param DateTime|int|null $ttl Expiration date.
+     * @return void
+     */
     public function setMultiple($values, $ttl = null)
     {
         foreach ($values as $key => $value) {
@@ -79,6 +119,12 @@ class WPFilesystemCache implements CacheInterface
         }
     }
 
+    /**
+     * Delete multiple keys.
+     *
+     * @param string[] $keys Keys to delete.
+     * @return void
+     */
     public function deleteMultiple($keys)
     {
         $array_keys = (array) $keys;
@@ -87,16 +133,31 @@ class WPFilesystemCache implements CacheInterface
         });
     }
 
+    /**
+     * Has a key.
+     * @param string $key Key to check.
+     * @return bool
+     */
     public function has($key)
     {
         return $this->filesystem->exists($this->transform_key_to_path($key));
     }
 
+    /**
+     * Transform the key to a path to save.
+     *
+     * @param string $key key used.
+     * @return string
+     */
     protected function transform_key_to_path(string $key): string {
         $path = apply_filters("{$this->prefix}root_path", $this->root_directory . '/' ) . $key;
         return  str_replace('/', DIRECTORY_SEPARATOR, $path) . '.html';
     }
 
+    /**
+     * Get root path from the cache.
+     * @return string
+     */
     protected function get_root(): string {
         $path = apply_filters("{$this->prefix}root_path", $this->root_directory . '/' );
         return  str_replace('/', DIRECTORY_SEPARATOR, $path);

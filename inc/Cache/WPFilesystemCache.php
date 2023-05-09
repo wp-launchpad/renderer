@@ -60,9 +60,7 @@ class WPFilesystemCache implements CacheInterface
 
     public function clear()
     {
-        foreach ($this->filesystem->dirlist($this->get_root()) as $node) {
-            $this->filesystem->delete($this->get_root() . DIRECTORY_SEPARATOR . $node['name'], true);
-        }
+        $this->filesystem->delete($this->get_root(), true);
     }
 
     public function getMultiple($keys, $default = null)

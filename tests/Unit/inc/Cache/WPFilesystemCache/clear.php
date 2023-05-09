@@ -53,7 +53,7 @@ class Test_clear extends TestCase {
     public function testShouldDoAsExpected( $config, $expected )
     {
         $this->setProperties($this->wpfilesystemcache, $config['properties']);
-        $this->filesystem->expects()->rmdir($expected, true);
+        $this->filesystem->expects()->delete($expected, true);
         $this->wpfilesystemcache->clear();
 
     }

@@ -6,7 +6,7 @@ return [
                 'root_directory' => 'root_directory'
             ],
         ],
-        'expected' => 'root_directory'
+        'expected' => 'root_directory/'
     ],
 
 ];

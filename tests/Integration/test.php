@@ -20,8 +20,12 @@ add_action( 'plugins_loaded',  function() {
         return;
     }
 
+    $container = new Container();
+
+    $container = $container->defaultToShared();
+
     $wp_rocket = new Plugin(
-        new Container(),
+        $container,
         new EventManager()
     );
 

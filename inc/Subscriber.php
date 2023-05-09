@@ -2,7 +2,6 @@
 namespace LaunchpadRenderer;
 
 use LaunchpadCore\EventManagement\SubscriberInterface;
-use LaunchpadRenderer\Renderer\Renderer;
 use League\Plates\Engine;
 use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
@@ -10,30 +9,40 @@ use Psr\SimpleCache\InvalidArgumentException;
 class Subscriber implements SubscriberInterface {
 
     /**
+     * Hook prefix.
+     *
      * @var string
      */
     protected $prefix;
 
     /**
+     * Is the renderer cache activated.
+     *
      * @var bool
      */
     protected $renderer_cache_enabled;
 
     /**
+     * Cache instance.
+     *
      * @var CacheInterface
      */
     protected $cache;
 
     /**
+     * Renderer instance.
+     *
      * @var Engine
      */
     protected $renderer;
 
     /**
-     * @param string $prefix
-     * @param bool $renderer_cache_enabled
-     * @param CacheInterface $cache
-     * @param Engine $renderer
+     * Instantiate the class.
+     *
+     * @param string $prefix Hook prefix.
+     * @param bool $renderer_cache_enabled Is the renderer cache activated.
+     * @param CacheInterface $cache Cache instance.
+     * @param Engine $renderer Renderer instance.
      */
     public function __construct(string $prefix, bool $renderer_cache_enabled, CacheInterface $cache, Engine $renderer)
     {
@@ -45,19 +54,6 @@ class Subscriber implements SubscriberInterface {
 
     /**
      * Returns an array of events that this subscriber wants to listen to.
-     *
-     * The array key is the event name. The value can be:
-     *
-     *  * The method name
-     *  * An array with the method name and priority
-     *  * An array with the method name, priority and number of accepted arguments
-     *
-     * For instance:
-     *
-     *  * array('hook_name' => 'method_name')
-     *  * array('hook_name' => array('method_name', $priority))
-     *  * array('hook_name' => array('method_name', $priority, $accepted_args))
-     *  * array('hook_name' => array(array('method_name_1', $priority_1, $accepted_args_1)), array('method_name_2', $priority_2, $accepted_args_2)))
      *
      * @return array
      */
@@ -71,7 +67,15 @@ class Subscriber implements SubscriberInterface {
         ];
     }
 
-
+    /**
+     * Has cache from a template.
+     * @param string $template Name from the template.
+     * @param array $configurations Configurations.
+     *
+     * @return bool
+     *
+     * @throws InvalidArgumentException
+     */
     public function has(string $template, array $configurations = []) {
         if( ! $this->renderer_cache_enabled ) {
             return false;
@@ -81,6 +85,14 @@ class Subscriber implements SubscriberInterface {
         return $this->cache->has($key);
     }
 
+    /**
+     * Render a template.
+     * @param string $template Name from the template.
+     * @param array $configurations Configurations.
+     *
+     * @return void
+     * @throws InvalidArgumentException
+     */
     public function render(string $template, array $configurations = []) {
         $key = $this->create_key($template, $configurations);
 
@@ -98,6 +110,13 @@ class Subscriber implements SubscriberInterface {
         echo $content;
     }
 
+    /**
+     * Delete cache from a template.
+     *
+     * @param string $template Name from the template.
+     * @param array $configurations Configurations.
+     * @return void
+     */
     public function delete(string $template, array $configurations = []) {
         $key = $this->create_key($template, $configurations);
         try {
@@ -105,15 +124,32 @@ class Subscriber implements SubscriberInterface {
         } catch (InvalidArgumentException $e) {}
     }
 
+    /**
+     * Delete all templates cache.
+     *
+     * @return void
+     */
     public function clear() {
         $this->cache->clear();
     }
 
+    /**
+     * Transform parameters into a hash.
+     * @param array $parameters parameters to use.
+     * @return string
+     */
     protected function transform_parameters_into_hash(array $parameters) {
         $json = wp_json_encode($parameters);
         return md5($json);
     }
 
+    /**
+     * Create a key from the view and its parameters.
+     *
+     * @param string $template Name from the template.
+     * @param array $parameters parameters to use.
+     * @return string
+     */
     protected function create_key(string $template, array $parameters) {
         return $template . '-' . $this->transform_parameters_into_hash($parameters);
     }

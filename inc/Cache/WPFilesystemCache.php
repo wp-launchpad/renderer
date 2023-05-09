@@ -60,7 +60,9 @@ class WPFilesystemCache implements CacheInterface
 
     public function clear()
     {
-        $this->filesystem->rmdir($this->root_directory, true);
+        foreach ($this->filesystem->dirlist($this->get_root()) as $node) {
+            $this->filesystem->delete($this->get_root() . DIRECTORY_SEPARATOR . $node['name'], true);
+        }
     }
 
     public function getMultiple($keys, $default = null)
@@ -95,5 +97,10 @@ class WPFilesystemCache implements CacheInterface
     protected function transform_key_to_path(string $key): string {
         $path = apply_filters("{$this->prefix}root_path", $this->root_directory . '/' ) . $key;
         return  str_replace('/', DIRECTORY_SEPARATOR, $path) . '.html';
+    }
+
+    protected function get_root(): string {
+        $path = apply_filters("{$this->prefix}root_path", $this->root_directory . '/' );
+        return  str_replace('/', DIRECTORY_SEPARATOR, $path);
     }
 }

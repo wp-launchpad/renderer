@@ -2,6 +2,7 @@
 namespace LaunchpadRenderer;
 
 use LaunchpadCore\EventManagement\SubscriberInterface;
+use LaunchpadRenderer\Configuration\Factory;
 use League\Plates\Engine;
 use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
@@ -37,19 +38,28 @@ class Subscriber implements SubscriberInterface {
     protected $renderer;
 
     /**
+     * Configurations factory.
+     *
+     * @var Factory
+     */
+    protected $configurations_factory;
+
+    /**
      * Instantiate the class.
      *
      * @param string $prefix Hook prefix.
      * @param bool $renderer_cache_enabled Is the renderer cache activated.
      * @param CacheInterface $cache Cache instance.
      * @param Engine $renderer Renderer instance.
+     * @param Factory $factory Configurations factory.
      */
-    public function __construct(string $prefix, bool $renderer_cache_enabled, CacheInterface $cache, Engine $renderer)
+    public function __construct(string $prefix, bool $renderer_cache_enabled, CacheInterface $cache, Engine $renderer, Factory $factory)
     {
         $this->prefix = $prefix;
         $this->renderer_cache_enabled = $renderer_cache_enabled;
         $this->cache = $cache;
         $this->renderer = $renderer;
+        $this->configurations_factory = $factory;
     }
 
     /**
@@ -80,7 +90,10 @@ class Subscriber implements SubscriberInterface {
         if( ! $this->renderer_cache_enabled ) {
             return false;
         }
-        $key = $this->create_key($template, $configurations);
+
+        $configurations = $this->configurations_factory->make($configurations);
+
+        $key = $this->create_key($template, $configurations->get_cache_parameters());
 
         return $this->cache->has($key);
     }
@@ -94,14 +107,16 @@ class Subscriber implements SubscriberInterface {
      * @throws InvalidArgumentException
      */
     public function render(string $template, array $configurations = []) {
-        $key = $this->create_key($template, $configurations);
+        $configurations_instance = $this->configurations_factory->make($configurations);
+
+        $key = $this->create_key($template, $configurations_instance->get_cache_parameters());
 
         if( $this->has($template, $configurations) ) {
             echo $this->cache->get($key);
             return;
         }
 
-        $content = $this->renderer->render($template, $configurations);
+        $content = $this->renderer->render($template, $configurations_instance->get_view_parameters());
 
         if( $this->renderer_cache_enabled ) {
             $this->cache->set($key, $content);
@@ -118,7 +133,10 @@ class Subscriber implements SubscriberInterface {
      * @return void
      */
     public function delete(string $template, array $configurations = []) {
-        $key = $this->create_key($template, $configurations);
+        $configurations = $this->configurations_factory->make($configurations);
+
+        $key = $this->create_key($template, $configurations->get_cache_parameters());
+
         try {
             $this->cache->delete($key);
         } catch (InvalidArgumentException $e) {}

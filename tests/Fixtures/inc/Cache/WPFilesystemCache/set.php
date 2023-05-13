@@ -10,6 +10,7 @@ return [
               ]
         ],
         'expected' => [
+            'directory' => 'root_directory',
             'path' => 'root_directory/key.html',
             'content' => 'value',
         ]

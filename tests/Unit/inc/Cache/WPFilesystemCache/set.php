@@ -54,6 +54,7 @@ class Test_set extends TestCase {
     public function testShouldDoAsExpected( $config, $expected )
     {
         $this->setProperties($this->wpfilesystemcache, $config['properties']);
+        $this->filesystem->expects()->recursive_mkdir($expected['directory']);
         $this->filesystem->expects()->put_contents($expected['path'], $expected['content']);
         $this->wpfilesystemcache->set($config['key'], $config['value'], $config['ttl']);
 

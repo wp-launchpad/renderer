@@ -67,7 +67,10 @@ class WPFilesystemCache implements CacheInterface
      */
     public function set($key, $value, $ttl = null)
     {
-        $this->filesystem->put_contents($this->transform_key_to_path($key), $value);
+        $path = $this->transform_key_to_path($key);
+        $directory = dirname($path);
+        $this->filesystem->recursive_mkdir($directory);
+        $this->filesystem->put_contents($path, $value);
     }
 
     /**

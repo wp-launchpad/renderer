@@ -5,6 +5,8 @@ return [
               'properties' => [
                   'renderer_cache_enabled' => false,
               ],
+              'cache_parameters' => [],
+              'view_parameters' => [],
               'template' => 'view',
               'configurations' => [],
               'renderer_cache_enabled' => false,
@@ -19,6 +21,7 @@ return [
             'key' => 'view-d751713988987e9331980363e24189ce',
             'json' => 'json',
             'template' => 'view',
+            'view_parameters' => [],
             'parameters' => [
 
             ],
@@ -29,6 +32,8 @@ return [
             'properties' => [
                 'renderer_cache_enabled' => true,
             ],
+            'cache_parameters' => [],
+            'view_parameters' => [],
             'template' => 'view',
             'configurations' => [],
             'renderer_cache_enabled' => true,
@@ -43,6 +48,7 @@ return [
             'key' => 'view-d751713988987e9331980363e24189ce',
             'json' => 'json',
             'template' => 'view',
+            'view_parameters' => [],
             'parameters' => [
 
             ],
@@ -53,6 +59,8 @@ return [
             'properties' => [
                 'renderer_cache_enabled' => true,
             ],
+            'cache_parameters' => [],
+            'view_parameters' => [],
             'template' => 'view',
             'configurations' => [],
             'renderer_cache_enabled' => true,
@@ -67,6 +75,7 @@ return [
             'key' => 'view-d751713988987e9331980363e24189ce',
             'json' => 'json',
             'template' => 'view',
+            'view_parameters' => [],
             'parameters' => [
 
             ],

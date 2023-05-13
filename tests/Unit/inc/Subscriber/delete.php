@@ -2,6 +2,8 @@
 
 namespace LaunchpadRenderer\Tests\Unit\inc\Subscriber;
 
+use LaunchpadRenderer\Configuration\Configurations;
+use LaunchpadRenderer\Configuration\Factory;
 use League\Plates\Engine;
 use Mockery;
 use LaunchpadRenderer\Subscriber;
@@ -42,14 +44,26 @@ class Test_delete extends TestCase {
      */
     protected $subscriber;
 
+    /**
+     * @var Factory
+     */
+    protected $factory;
+
+    /**
+     * @var Configurations
+     */
+    protected $configurations;
+
     public function set_up() {
         parent::set_up();
         $this->prefix = '';
         $this->renderer_cache_enabled = false;
         $this->cache = Mockery::mock(CacheInterface::class);
         $this->renderer = Mockery::mock(Engine::class);
+        $this->factory = Mockery::mock(Factory::class);
+        $this->configurations = Mockery::mock(Configurations::class);
 
-        $this->subscriber = new Subscriber($this->prefix, $this->renderer_cache_enabled, $this->cache, $this->renderer);
+        $this->subscriber = new Subscriber($this->prefix, $this->renderer_cache_enabled, $this->cache, $this->renderer, $this->factory);
     }
 
     /**
@@ -60,6 +74,8 @@ class Test_delete extends TestCase {
         Functions\expect('wp_encode_json')->with($expected['parameters'])->andReturn($config['json']);
         Functions\expect('wp_hash')->with($expected['json'])->andReturn($config['hash']);
         $this->cache->expects()->delete($expected['key']);
+        $this->factory->expects()->make($expected['parameters'])->andReturn($this->configurations);
+        $this->configurations->expects()->get_cache_parameters()->andReturn($config['cache_parameters']);
         $this->subscriber->delete($config['template'], $config['configurations']);
     }
 }

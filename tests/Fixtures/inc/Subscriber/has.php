@@ -8,7 +8,8 @@ return [
               'properties' => [
                   'renderer_cache_enabled' => false,
               ],
-              'json' => 'json',
+            'cache_parameters' => [],
+            'json' => 'json',
               'hash' => 'hash',
             'has_cache_hit' =>  false,
         ],
@@ -29,6 +30,7 @@ return [
             'properties' => [
                 'renderer_cache_enabled' => true,
             ],
+            'cache_parameters' => [],
             'json' => 'json',
             'hash' => 'hash',
             'has_cache_hit' =>  true,
@@ -50,6 +52,7 @@ return [
             'properties' => [
                 'renderer_cache_enabled' => true,
             ],
+            'cache_parameters' => [],
             'json' => 'json',
             'hash' => 'hash',
             'has_cache_hit' =>  false,

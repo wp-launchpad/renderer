@@ -2,6 +2,8 @@
 
 namespace LaunchpadRenderer\Tests\Unit\inc\Subscriber;
 
+use LaunchpadRenderer\Configuration\Configurations;
+use LaunchpadRenderer\Configuration\Factory;
 use LaunchpadRenderer\Tests\Unit\InitializeProperties;
 use League\Plates\Engine;
 use Mockery;
@@ -45,14 +47,26 @@ class Test_render extends TestCase {
      */
     protected $subscriber;
 
+    /**
+     * @var Factory
+     */
+    protected $factory;
+
+    /**
+     * @var Configurations
+     */
+    protected $configurations;
+
     public function set_up() {
         parent::set_up();
         $this->prefix = '';
         $this->renderer_cache_enabled = false;
         $this->cache = Mockery::mock(CacheInterface::class);
         $this->renderer = Mockery::mock(Engine::class);
+        $this->factory = Mockery::mock(Factory::class);
+        $this->configurations = Mockery::mock(Configurations::class);
 
-        $this->subscriber = new Subscriber($this->prefix, $this->renderer_cache_enabled, $this->cache, $this->renderer);
+        $this->subscriber = new Subscriber($this->prefix, $this->renderer_cache_enabled, $this->cache, $this->renderer, $this->factory);
     }
 
     /**
@@ -63,6 +77,9 @@ class Test_render extends TestCase {
         $this->setProperties($this->subscriber, $config['properties']);
         Functions\expect('wp_encode_json')->with($expected['parameters'])->andReturn($config['json']);
         Functions\expect('wp_hash')->with($expected['json'])->andReturn($config['hash']);
+        $this->factory->shouldReceive('make')->with($expected['parameters'])->andReturn($this->configurations)->atLeast()->once();
+        $this->configurations->shouldReceive('get_cache_parameters')->andReturn($config['cache_parameters'])->atLeast()->once();
+
         $this->configureCache($config, $expected);
         $this->configureRenderer($config, $expected);
         ob_start();
@@ -90,7 +107,8 @@ class Test_render extends TestCase {
             return;
         }
 
-        $this->renderer->expects()->render($expected['template'], $expected['parameters'])->andReturn($config['content']);
+        $this->configurations->expects()->get_view_parameters()->andReturn($config['view_parameters']);
+        $this->renderer->expects()->render($expected['template'], $expected['view_parameters'])->andReturn($config['content']);
 
         if(! $config['renderer_cache_enabled']) {
             return;

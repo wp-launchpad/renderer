@@ -23,6 +23,7 @@ class ServiceProvider extends AbstractServiceProvider
     public function get_common_subscribers(): array {
         return [
             Subscriber::class,
+            \LaunchpadRenderer\Cache\Cron\Subscriber::class,
         ];
     }
 
@@ -62,6 +63,13 @@ class ServiceProvider extends AbstractServiceProvider
                 ->addArgument($this->getContainer()->get($renderer_caching_solution))
                 ->addArgument($this->getContainer()->get(Engine::class))
                 ->addArgument($this->getContainer()->get(Factory::class));
+        });
+
+        $this->register_service(\LaunchpadRenderer\Cache\Cron\Subscriber::class, function (Definition $definition) {
+            $definition
+                ->addArgument($this->getContainer()->get('prefix'))
+                ->addArgument($this->getContainer()->get('renderer_cache_enabled'))
+                ->addArgument($this->getContainer()->get(WPFilesystemCache::class));
         });
     }
 }

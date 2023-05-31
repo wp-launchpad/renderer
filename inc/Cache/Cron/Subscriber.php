@@ -1,8 +1,7 @@
 <?php
 namespace LaunchpadRenderer\Cache\Cron;
 use LaunchpadCore\EventManagement\SubscriberInterface;
-use function LaunchpadRenderer\Cron\wp_next_scheduled;
-use function LaunchpadRenderer\Cron\wp_schedule_event;
+use LaunchpadRenderer\Cache\WPFilesystemCache;
 
 class Subscriber implements SubscriberInterface {
 
@@ -16,6 +15,22 @@ class Subscriber implements SubscriberInterface {
      */
     protected $renderer_cache_enabled;
 
+    /**
+     * @var WPFilesystemCache
+     */
+    protected $cache;
+
+    /**
+     * @param string $prefix
+     * @param bool $renderer_cache_enabled
+     * @param WPFilesystemCache $cache
+     */
+    public function __construct(string $prefix, bool $renderer_cache_enabled, WPFilesystemCache $cache)
+    {
+        $this->prefix = $prefix;
+        $this->renderer_cache_enabled = $renderer_cache_enabled;
+        $this->cache = $cache;
+    }
 
 
     /**
@@ -38,7 +53,9 @@ class Subscriber implements SubscriberInterface {
      */
     public function get_subscribed_events() {
         return [
-            '' => 'register_event',
+            'init' => 'register_event',
+            'cron_schedules' => 'register_interval',
+            "{$this->prefix}_renderer_clear_cache" => 'clear_expired_cache',
         ];
     }
 
@@ -74,6 +91,6 @@ class Subscriber implements SubscriberInterface {
     }
 
     public function clear_expired_cache() {
-
+        $this->cache->clear_expired();
     }
 }

@@ -71,6 +71,22 @@ class WPFilesystemCache implements CacheInterface
         $directory = dirname($path);
         $this->filesystem->recursive_mkdir($directory);
         $this->filesystem->put_contents($path, $value);
+        if(! $ttl) {
+            return;
+        }
+        $timestamp = $this->ttl_to_timestamp($ttl);
+        $json_path = preg_replace('/\.php$/', '.json', $path);
+        $json = wp_json_encode([
+            'ttl' => $timestamp,
+        ]);
+        $this->filesystem->put_contents($json_path, $json);
+    }
+
+    protected function ttl_to_timestamp($ttl) {
+        if(is_int($ttl)) {
+            return $ttl;
+        }
+        return $ttl->getTimestamp();
     }
 
     /**
@@ -164,5 +180,27 @@ class WPFilesystemCache implements CacheInterface
     protected function get_root(): string {
         $path = apply_filters("{$this->prefix}root_path", $this->root_directory . '/' );
         return  str_replace('/', DIRECTORY_SEPARATOR, $path);
+    }
+
+    public function clear_expired(): void {
+        foreach($this->filesystem->dirlist($this->get_root(), false, true) as $node) {
+            if($node['type'] !== 'file' || ! preg_match('/\.json$/', $node['path'])) {
+                continue;
+            }
+
+            $content = $this->filesystem->get_contents($node['path']);
+            $json = json_decode($content, true);
+            if(! key_exists('ttl', $json)) {
+                continue;
+            }
+
+            if($json['ttl'] > time()) {
+                continue;
+            }
+
+            $cache = preg_replace('/\.json$/', '.php', $node['path']);
+            $this->filesystem->delete($cache);
+            $this->filesystem->delete($node['path']);
+        }
     }
 }

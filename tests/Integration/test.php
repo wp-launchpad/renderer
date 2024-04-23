@@ -26,7 +26,8 @@ add_action( 'plugins_loaded',  function() {
 
     $wp_rocket = new Plugin(
         $container,
-        new EventManager()
+        new EventManager(),
+        new \LaunchpadCore\EventManagement\Wrapper\SubscriberWrapper('prefix_')
     );
 
     $wp_rocket->load( [

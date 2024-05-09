@@ -1,13 +1,13 @@
 <?php
 namespace LaunchpadRenderer;
 
-use LaunchpadCore\EventManagement\SubscriberInterface;
+use LaunchpadCore\EventManagement\ClassicSubscriberInterface;
 use LaunchpadRenderer\Configuration\Factory;
 use League\Plates\Engine;
 use Psr\SimpleCache\CacheInterface;
 use Psr\SimpleCache\InvalidArgumentException;
 
-class Subscriber implements SubscriberInterface {
+class Subscriber implements ClassicSubscriberInterface {
 
     /**
      * Hook prefix.

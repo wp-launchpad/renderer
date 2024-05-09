@@ -1,6 +1,8 @@
 <?php
 
+use LaunchpadCore\EventManagement\Wrapper\SubscriberWrapper;
 use LaunchpadCore\Plugin;
+use LaunchpadDispatcher\Dispatcher;
 use LaunchpadRenderer\Cache\WPFilesystemCache;
 use LaunchpadRenderer\ServiceProvider;
 use League\Container\Container;
@@ -24,13 +26,17 @@ add_action( 'plugins_loaded',  function() {
 
     $container = $container->defaultToShared();
 
+    $prefix = 'prefix_';
+
     $wp_rocket = new Plugin(
         $container,
-        new EventManager()
+        new EventManager(),
+        new SubscriberWrapper( $prefix ),
+        new Dispatcher()
     );
 
     $wp_rocket->load( [
-        'prefix' => 'prefix_',
+        'prefix' => $prefix,
         'template_path' => LAUNCHPAD_RENDERER_TESTS_FIXTURES_DIR . '/files/templates/',
         'root_directory' => WP_CONTENT_DIR . '/cache/',
         'renderer_cache_enabled' => true,

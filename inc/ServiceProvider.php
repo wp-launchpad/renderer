@@ -38,16 +38,16 @@ class ServiceProvider extends AbstractServiceProvider
 
         $this->register_service(WPFilesystemCache::class, function (Definition $definition) {
             $definition
-                ->addArgument($this->getContainer()->get(WPFilesystemDirect::class))
-                ->addArgument($this->getContainer()->get('root_directory'))
-                ->addArgument($this->getContainer()->get('prefix'));
+                ->addArgument(WPFilesystemDirect::class)
+                ->addArgument('root_directory')
+                ->addArgument('prefix');
         });
 
         $this->register_service(Factory::class);
 
         $this->register_service(Engine::class, function (Definition $definition) {
             $definition
-                ->addArgument($this->getContainer()->get('template_path'));
+                ->addArgument('template_path');
         });
 
         $this->register_service(Subscriber::class, function (Definition $definition) {
@@ -57,11 +57,11 @@ class ServiceProvider extends AbstractServiceProvider
                 $renderer_caching_solution = WPFilesystemCache::class;
             }
             $definition
-                ->addArgument($this->getContainer()->get('prefix'))
-                ->addArgument($this->getContainer()->get('renderer_cache_enabled'))
-                ->addArgument($this->getContainer()->get($renderer_caching_solution))
-                ->addArgument($this->getContainer()->get(Engine::class))
-                ->addArgument($this->getContainer()->get(Factory::class));
+                ->addArgument('prefix')
+                ->addArgument('renderer_cache_enabled')
+                ->addArgument($renderer_caching_solution)
+                ->addArgument(Engine::class)
+                ->addArgument(Factory::class);
         });
     }
 }

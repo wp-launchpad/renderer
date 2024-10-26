@@ -1,7 +1,7 @@
 {
   "name": "wp-launchpad/renderer",
+  "minimum-stability": "dev",
   "description": "Renderer library for Launchpad framework",
-  "minimum-stability": "stable",
   "license": "proprietary",
   "type": "library",
   "authors": [
@@ -11,8 +11,8 @@
     }
   ],
   "require": {
-    "wp-launchpad/core": "^0.3",
-    "wp-launchpad/filesystem": "v0.0.3",
+    "wp-launchpad/core": "^0.3 || @dev",
+    "wp-launchpad/filesystem": "v0.0.3 || @dev",
     "psr/simple-cache": "^1.0",
     "league/plates": "^3.5"
   },

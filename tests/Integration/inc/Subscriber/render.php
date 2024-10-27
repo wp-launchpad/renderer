@@ -50,7 +50,7 @@ class Test_render extends TestCase {
             }
             $this->assertFalse($this->filesystem->exists($path));
         }
-        $this->assertSame($expected['print'], $content);
+		$this->assertSame($expected['print'], $content);
     }
 
     public function root_path() {

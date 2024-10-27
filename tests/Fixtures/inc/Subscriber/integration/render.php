@@ -6,7 +6,7 @@ $html = <<<HTML
 <body>
 
 </body>
-</html>
+</html>;\Patchwork\CodeManipulation\Stream::reinstateWrapper();
 HTML;
 
 

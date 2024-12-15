@@ -31,7 +31,7 @@ add_action( 'plugins_loaded',  function() {
     $wp_rocket = new Plugin(
         $container,
         new EventManager(),
-        new SubscriberWrapper( $prefix ),
+        new SubscriberWrapper( $prefix, $container ),
         new Dispatcher()
     );
 
